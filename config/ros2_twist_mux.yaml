@@ -1,0 +1,17 @@
+ros2_twist_mux:
+  ros__parameters:
+    output_topic: "cmd_vel"
+    emergency_topic: "emergency_stop"
+    emergency_timeout: 0.5
+    enable_emergency: False
+    inputs: ["controller", "joy"]
+    
+    joy:
+      topic: "/cmd_vel/joy"
+      priority: 50
+      timeout: 0.5
+    
+    controller:
+      topic: "/cmd_vel/pure_pursuit"
+      priority: 100
+      timeout: 0.5

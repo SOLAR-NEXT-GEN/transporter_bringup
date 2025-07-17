@@ -20,7 +20,16 @@ def generate_launch_description():
     localization_share = get_package_share_directory('transporter_localization')
     bringup_share = get_package_share_directory('transporter_bringup')
     
-    twist_mux_config = os.path.join(bringup_share, 'config', 'twist_mux.yaml')
+    twist_mux_config = os.path.join(bringup_share, 'config', 'ros2_twist_mux.yaml')
+    
+    twist_mux_node = Node(
+        package='ros2_twist_mux',
+        executable='ros2_twist_mux.py',
+        name='ros2_twist_mux',
+        parameters=[twist_mux_config],
+        output='screen',
+        emulate_tty=True,
+    )
 
     simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(simulation_share, 'launch/gazebo.launch.py'))
@@ -35,6 +44,7 @@ def generate_launch_description():
         executable='sim_joy.py',
         name='joy_control',
         output='screen',
+        remappings=[('/cmd_vel', '/cmd_vel/joy')],
     )
 
     joy = Node(
@@ -73,6 +83,7 @@ def generate_launch_description():
             'max_linear_vel': 0.5,
             'max_angular_vel': 1.0
         }],
+        remappings=[('/cmd_vel', '/cmd_vel/pure_pursuit')],
     )
 
     # Spawn joint state broadcaster
@@ -135,7 +146,8 @@ def generate_launch_description():
         [
             simulation,
             localization,
-            # joy_control,
+            twist_mux_node,
+            joy_control,
             joy,
             path_generator,
             path_scheduler,

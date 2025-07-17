@@ -24,7 +24,7 @@ def generate_launch_description():
     # micro-ROS agent
     micro_ros_agent = ExecuteProcess(
         cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
-             'serial', '-b', '2000000', '--dev', '/dev/ttyACM0'],
+             'serial', '-b', '2000000', '--dev', '/dev/ttyTransporterMobile'],
         output='screen',
         emulate_tty=True,
     )
