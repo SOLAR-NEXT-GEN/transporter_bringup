@@ -57,17 +57,17 @@ def generate_launch_description():
     # micro-ROS agent
     mobile_node = ExecuteProcess(
         cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
-             'serial', '-b', '2000000', '--dev', '/dev/ttyTransporterMobile'],
+             'serial', '-b', '115200', '--dev', '/dev/ttyTransporterMobile'],
         output='screen',
         emulate_tty=True,
     )
 
-    mani_node = ExecuteProcess(
-        cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
-             'serial', '-b', '115200', '--dev', '/dev/ttyTransporterLeftMani'],
-        output='screen',
-        emulate_tty=True,
-    )
+    # mani_node = ExecuteProcess(
+    #     cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
+    #          'serial', '-b', '115200', '--dev', '/dev/ttyTransporterLeftMani'],
+    #     output='screen',
+    #     emulate_tty=True,
+    # )
 
     gps = Node(
         package='sparkfun_rtk_express',
@@ -119,15 +119,15 @@ def generate_launch_description():
     return LaunchDescription([
         twist_mux_node,
         mobile_node,
-        mani_node,
+        # mani_node,
         joy_node,
-        # mani_control,
+        mani_control,
         transport_joy_node,
         path_generator,
         path_scheduler,
         pure_pursuit,
-        localization,
-        description,
-        gps,
-        yaw_reader,
+        # localization,
+        # description,
+        # gps,
+        # yaw_reader,
     ])
