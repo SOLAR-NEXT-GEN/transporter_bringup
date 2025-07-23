@@ -36,7 +36,7 @@ def generate_launch_description():
     )
 
     localization = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(localization_share, 'launch/localization_sim.launch.py'))
+    PythonLaunchDescriptionSource(os.path.join(localization_share, 'launch/localization_sim.launch.py'))
     )
 
     joy_control = Node(
