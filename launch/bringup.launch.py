@@ -57,17 +57,17 @@ def generate_launch_description():
     # micro-ROS agent
     mobile_node = ExecuteProcess(
         cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
-             'serial', '-b', '115200', '--dev', '/dev/ttyTransporterMobile'],
+             'serial', '-b', '115200', '--dev', '/dev/ttyACM0'],
         output='screen',
         emulate_tty=True,
     )
 
-    # mani_node = ExecuteProcess(
-    #     cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
-    #          'serial', '-b', '115200', '--dev', '/dev/ttyTransporterLeftMani'],
-    #     output='screen',
-    #     emulate_tty=True,
-    # )
+    mani_node = ExecuteProcess(
+        cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
+             'serial', '-b', '2000000', '--dev', '/dev/ttyTransporterLeftMani'],
+        output='screen',
+        emulate_tty=True,
+    )
 
     gps = Node(
         package='sparkfun_rtk_express',
@@ -90,9 +90,9 @@ def generate_launch_description():
         name='straight_path_generator',
         output='screen',
         parameters=[{
-            'path_length': 4.0,
-            'waypoint_spacing': 0.1,
-            'start_offset': 1.0,
+            'path_length': 2.0,
+            'waypoint_spacing': 0.05,
+            'start_offset': 0.0,
         }]
     )
     
@@ -109,7 +109,7 @@ def generate_launch_description():
         name='diff_pure_pursuit_path_follower',
         output='screen',
         parameters=[{
-            'lookahead_distance': 3.0,
+            'lookahead_distance': 1.0,
             'max_linear_vel': 0.1225,
             'max_angular_vel': 0.064
         }],
@@ -119,15 +119,15 @@ def generate_launch_description():
     return LaunchDescription([
         twist_mux_node,
         mobile_node,
-        # mani_node,
+        mani_node,
         joy_node,
         mani_control,
         transport_joy_node,
         path_generator,
         path_scheduler,
         pure_pursuit,
-        # localization,
-        # description,
-        # gps,
-        # yaw_reader,
+        localization,
+        description,
+        gps,
+        yaw_reader,
     ])
