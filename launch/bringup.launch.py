@@ -99,31 +99,31 @@ def generate_launch_description():
     )
 
     path_generator = Node(
-        package='transporter_controller',
+        package='transporter_path',
         executable='straight_path_generator.py',
         name='straight_path_generator',
         output='screen',
         parameters=[{
-            'path_length': 0.5,
-            'waypoint_spacing': 0.1,
+            'path_length': 2.0,
+            'waypoint_spacing': 0.05,
             'start_offset': 0.0,
         }]
     )
     
-    path_scheduler = Node(
-        package='transporter_controller',
-        executable='path_real_planning.py',
-        name='path_scheduler',
+    navigation_scheduler = Node(
+        package='transporter_bringup',
+        executable='navigation_scheduler.py',
+        name='navigation_scheduler',
         output='screen'
     )
     
     pure_pursuit = Node(
         package='transporter_controller',
-        executable='diff_pure_pursit.py',
-        name='diff_pure_pursuit_path_follower',
+        executable='pure_pursuit_controller.py',
+        name='pure_pursuit_controller',
         output='screen',
         parameters=[{
-            'lookahead_distance': 1.0,
+            'lookahead_distance': 0.5,
             'max_linear_velocity': 0.1225,
             'max_angular_velocity': 0.064
         }],
@@ -132,17 +132,18 @@ def generate_launch_description():
     
     return LaunchDescription([
         twist_mux_node,
+        joy_node,
         mobile_node,
         mani_node,
         bno_node,
-        joy_node,
+        gps,
+        yaw_reader,
         mani_control,
         transport_joy_node,
         path_generator,
-        path_scheduler,
+        navigation_scheduler,
         pure_pursuit,
         localization,
         description,
-        gps,
-        yaw_reader,
+
     ])

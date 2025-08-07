@@ -58,7 +58,7 @@ def generate_launch_description():
         }]
     )
     
-    path_scheduler = Node(
+    navigation_scheduler = Node(
         package='transporter_bringup',
         executable='navigation_scheduler.py',
         name='navigation_scheduler',
@@ -129,7 +129,7 @@ def generate_launch_description():
             joy_control,
             joy,
             path_generator,
-            path_scheduler,
+            navigation_scheduler,
             pure_pursuit,
             mani_sim,
             delayed_joint_state_broadcaster,
