@@ -1,18 +1,10 @@
 #/bin/python3
-
 import os
-
 from ament_index_python.packages import get_package_share_directory
-
 from launch import LaunchDescription
 from launch_ros.actions import Node
-
 from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
-
-datum_lat = 13.763656
-datum_lon = 100.527998
 
 def generate_launch_description():
 
@@ -86,7 +78,6 @@ def generate_launch_description():
         remappings=[('/cmd_vel', '/cmd_vel/pure_pursuit')],
     )
 
-    # Spawn joint state broadcaster
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
@@ -94,7 +85,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # Spawn Left Hinge controller
     left_hinge_controller_spawner = Node(
         package='controller_manager',
         executable='spawner',
@@ -102,7 +92,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # Spawn Right Hinge controller
     right_hinge_controller_spawner = Node(
         package='controller_manager',
         executable='spawner',
@@ -110,7 +99,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # Delay controller spawning
     delayed_joint_state_broadcaster = TimerAction(
         period=3.0,
         actions=[joint_state_broadcaster_spawner],

@@ -5,7 +5,6 @@ from launch.actions import ExecuteProcess
 
 
 def generate_launch_description():
-    # Joy node
     joy_node = Node(
         package='joy',
         executable='joy_node',
@@ -13,7 +12,6 @@ def generate_launch_description():
         output='screen',
     )
     
-    # Transporter joy node
     transport_joy_node = Node(
         package='transporter_joy',
         executable='joy.py',
@@ -21,7 +19,6 @@ def generate_launch_description():
         output='screen',
     )
     
-    # micro-ROS agent
     micro_ros_agent = ExecuteProcess(
         cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
              'serial', '-b', '2000000', '--dev', '/dev/ttyTransporterMobile'],

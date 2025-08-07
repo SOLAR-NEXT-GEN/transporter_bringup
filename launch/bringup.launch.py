@@ -57,14 +57,21 @@ def generate_launch_description():
     # micro-ROS agent
     mobile_node = ExecuteProcess(
         cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
-             'serial', '-b', '115200', '--dev', '/dev/ttyACM0'],
+             'serial', '-b', '2000000', '--dev', '/dev/ttyTransporterMobile'],
         output='screen',
         emulate_tty=True,
     )
 
     mani_node = ExecuteProcess(
         cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
-             'serial', '-b', '2000000', '--dev', '/dev/ttyTransporterLeftMani'],
+             'serial', '-b', '115200', '--dev', '/dev/ttyTransporterLeftMani'],
+        output='screen',
+        emulate_tty=True,
+    )
+
+    bno_node = ExecuteProcess(
+        cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
+             'serial', '-b', '2000000', '--dev', '/dev/ttyTransporterBNO'],
         output='screen',
         emulate_tty=True,
     )
@@ -76,12 +83,19 @@ def generate_launch_description():
         output='screen',
     )
 
+    # yaw_reader = Node(
+    #     package='hwt101ct_tilt_angle_sensor',
+    #     executable='hwt101ct_yaw_publisher.py',
+    #     name='hwt101ct_yaw_publisher',
+    #     output='screen',
+    #     remappings=[('hwt101ct_yaw_publisher', '/imu')],
+    # )
+
     yaw_reader = Node(
-        package='hwt101ct_tilt_angle_sensor',
-        executable='hwt101ct_yaw_publisher.py',
-        name='hwt101ct_yaw_publisher',
+        package='transporter_imu',
+        executable='imu_converter.py',
+        name='imu_converter',
         output='screen',
-        remappings=[('hwt101ct_yaw_publisher', '/imu')],
     )
 
     path_generator = Node(
@@ -90,8 +104,8 @@ def generate_launch_description():
         name='straight_path_generator',
         output='screen',
         parameters=[{
-            'path_length': 2.0,
-            'waypoint_spacing': 0.05,
+            'path_length': 0.5,
+            'waypoint_spacing': 0.1,
             'start_offset': 0.0,
         }]
     )
@@ -110,8 +124,8 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'lookahead_distance': 1.0,
-            'max_linear_vel': 0.1225,
-            'max_angular_vel': 0.064
+            'max_linear_velocity': 0.1225,
+            'max_angular_velocity': 0.064
         }],
         remappings=[('/cmd_vel', '/cmd_vel/pure_pursuit')],
     )
@@ -120,6 +134,7 @@ def generate_launch_description():
         twist_mux_node,
         mobile_node,
         mani_node,
+        bno_node,
         joy_node,
         mani_control,
         transport_joy_node,
