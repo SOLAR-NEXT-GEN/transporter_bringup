@@ -69,12 +69,12 @@ def generate_launch_description():
         emulate_tty=True,
     )
 
-    bno_node = ExecuteProcess(
-        cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
-             'serial', '-b', '2000000', '--dev', '/dev/ttyTransporterBNO'],
-        output='screen',
-        emulate_tty=True,
-    )
+    # bno_node = ExecuteProcess(
+    #     cmd=['ros2', 'run', 'micro_ros_agent', 'micro_ros_agent', 
+    #          'serial', '-b', '2000000', '--dev', '/dev/ttyTransporterBNO'],
+    #     output='screen',
+    #     emulate_tty=True,
+    # )
 
     gps = Node(
         package='sparkfun_rtk_express',
@@ -83,20 +83,20 @@ def generate_launch_description():
         output='screen',
     )
 
-    # yaw_reader = Node(
-    #     package='hwt101ct_tilt_angle_sensor',
-    #     executable='hwt101ct_yaw_publisher.py',
-    #     name='hwt101ct_yaw_publisher',
-    #     output='screen',
-    #     remappings=[('hwt101ct_yaw_publisher', '/imu')],
-    # )
-
     yaw_reader = Node(
-        package='transporter_imu',
-        executable='imu_converter.py',
-        name='imu_converter',
+        package='hwt101ct_tilt_angle_sensor',
+        executable='hwt101ct_yaw_publisher.py',
+        name='hwt101ct_yaw_publisher',
         output='screen',
+        remappings=[('hwt101ct_yaw_publisher', '/imu')],
     )
+
+    # yaw_reader = Node(
+    #     package='transporter_imu',
+    #     executable='imu_converter.py',
+    #     name='imu_converter',
+    #     output='screen',
+    # )
 
     path_generator = Node(
         package='transporter_path',
@@ -104,7 +104,7 @@ def generate_launch_description():
         name='straight_path_generator',
         output='screen',
         parameters=[{
-            'path_length': 2.0,
+            'path_length': 1.0,
             'waypoint_spacing': 0.05,
             'start_offset': 0.0,
         }]
@@ -123,7 +123,7 @@ def generate_launch_description():
         name='pure_pursuit_controller',
         output='screen',
         parameters=[{
-            'lookahead_distance': 0.5,
+            'lookahead_distance': 0.3,
             'max_linear_velocity': 0.1225,
             'max_angular_velocity': 0.064
         }],
@@ -135,7 +135,7 @@ def generate_launch_description():
         joy_node,
         mobile_node,
         mani_node,
-        bno_node,
+        # bno_node,
         gps,
         yaw_reader,
         mani_control,
